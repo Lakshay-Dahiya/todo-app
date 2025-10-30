@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1 class="title">My Todo App</h1>
+                    <p class="subtitle">Stay organized and productive</p>
+                </div>
+                <div class="header-actions">
+                    <button class="help-btn" id="helpBtn" title="Keyboard shortcuts (?)">
+                        <span class="help-icon">?</span>
+                    </button>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <form class="todo-form" id="todoForm">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search todos..."
+                    >
+                    <button type="button" class="search-clear" id="searchClear">✕</button>
+                </div>
+                
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="todoInput" 
+                        class="todo-input" 
+                        placeholder="What needs to be done?"
+                        required
+                    >
+                    <div class="input-row">
+                        <input 
+                            type="text" 
+                            id="categoryInput" 
+                            class="category-input" 
+                            placeholder="Category (optional)"
+                        >
+                        <input 
+                            type="date" 
+                            id="dueDateInput" 
+                            class="due-date-input" 
+                            title="Due date (optional)"
+                        >
+                        <select id="prioritySelect" class="priority-select">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                        <button type="submit" class="add-btn">
+                            <span class="btn-text">Add Todo</span>
+                            <span class="btn-icon">+</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="high">High Priority</button>
+                <button class="filter-btn" data-filter="medium">Medium Priority</button>
+                <button class="filter-btn" data-filter="low">Low Priority</button>
+                <button class="filter-btn" data-filter="overdue">Overdue</button>
+                <button class="filter-btn" data-filter="today">Due Today</button>
+            </div>
+
+            <div class="bulk-actions" id="bulkActions">
+                <div class="bulk-info">
+                    <span id="selectedCount">0</span> selected
+                </div>
+                <div class="bulk-buttons">
+                    <button class="bulk-btn" id="selectAllBtn">Select All</button>
+                    <button class="bulk-btn" id="deselectAllBtn">Deselect All</button>
+                    <button class="bulk-btn success" id="bulkCompleteBtn">Complete</button>
+                    <button class="bulk-btn warning" id="bulkUncompleteBtn">Uncomplete</button>
+                    <button class="bulk-btn danger" id="bulkDeleteBtn">Delete</button>
+                </div>
+            </div>
+
+            <div class="todo-list-container">
+                <ul class="todo-list" id="todoList">
+                    <!-- Todos will be dynamically added here -->
+                </ul>
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">📝</div>
+                    <h3>No todos yet</h3>
+                    <p>Add your first todo to get started!</p>
+                </div>
+            </div>
+
+            <div class="todo-stats" id="todoStats">
+                <span class="stats-text">
+                    <span id="activeCount">0</span> items left
+                </span>
+                <div class="stats-actions">
+                    <button class="export-btn" id="exportBtn" title="Export todos">
+                        📤 Export
+                    </button>
+                    <label class="import-btn" title="Import todos">
+                        📥 Import
+                        <input type="file" id="importInput" accept=".json,.csv" style="display: none;">
+                    </label>
+                    <button class="clear-completed" id="clearCompleted">
+                        Clear completed
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Keyboard Shortcuts Help Modal -->
+    <div class="modal-overlay" id="shortcutsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Keyboard Shortcuts</h3>
+                <button class="modal-close" id="closeShortcuts">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcut-grid">
+                    <div class="shortcut-item">
+                        <kbd>Ctrl + N</kbd>
+                        <span>Add new todo</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl + /</kbd>
+                        <span>Focus search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Escape</kbd>
+                        <span>Clear search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl + E</kbd>
+                        <span>Export todos</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl + I</kbd>
+                        <span>Import todos</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Ctrl + A</kbd>
+                        <span>Select all todos</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Delete</kbd>
+                        <span>Delete selected</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>Escape</kbd>
+                        <span>Clear selection/search</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <kbd>?</kbd>
+                        <span>Show this help</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
